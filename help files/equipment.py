@@ -57,3 +57,15 @@ class Equipment:
             return equipment_schema().load(data)
         except marshmallow.exceptions.ValidationError:
             raise ValueError
+
+
+"id": 1,
+    "name": "топорик",
+    "min_damage": 2.5,
+    "max_damage": 4.1,
+    "stamina_per_hit": 2
+
+"id": 2,
+    "name":"кожаная броня",
+    "defence": 1.2,
+    "stamina_per_turn": 1
