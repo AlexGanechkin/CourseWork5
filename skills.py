@@ -45,7 +45,8 @@ class Skill(ABC):
         """
         self.user = user
         self.target = target
-        if self._is_stamina_enough:
+        if self._is_stamina_enough():
+            user._is_skill_used = True
             return self.skill_effect()
         return f"{self.user.name} попытался использовать {self.name} но у него не хватило выносливости."
 
@@ -56,15 +57,14 @@ class FuryPunch(Skill):
     damage = 12
 
     def skill_effect(self):
-        if self.user._is_skill_used:
-            return "Навык уже использован."
 
         if self.target.hp - self.damage >= 0:
             self.target.hp -= self.damage
         else:
             self.target.hp = 0
 
-        self.user.max_stamina -= self.damage
+        self.user.stamina -= self.stamina
+
         return f"{self.user.name} использует {self.name} и наносит {self.damage} урона сопернику."
 
 class HardShot(Skill):
@@ -73,4 +73,12 @@ class HardShot(Skill):
     damage = 15
 
     def skill_effect(self):
-        pass
+
+        if self.target.hp - self.damage >= 0:
+            self.target.hp -= self.damage
+        else:
+            self.target.hp = 0
+
+        self.user.stamina -= self.stamina
+
+        return f"{self.user.name} использует {self.name} и наносит {self.damage} урона сопернику."
