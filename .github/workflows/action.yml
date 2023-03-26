@@ -1,0 +1,42 @@
+name: Start Course Work 5 App on Server
+on: [push]
+jobs:
+  build_and_push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: cloning code
+        uses: actions/checkout@v2
+      - name: building docker image
+        run: docker build -t alexjohanson/cw5-app:$GITHUB_REF_NAME-$GITHUB_RUN_ID .
+      - name: logging docker
+        run: echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+      - name: pushing docker image
+        run: docker push alexjohanson/cw5-app:$GITHUB_REF_NAME-$GITHUB_RUN_ID
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build_and_push
+    steps:
+      - name: cloning code
+        uses: actions/checkout@v2
+      - name: rendering configs
+        run: |
+          mkdir deploy
+          cat docker-compose-ci.yaml | envsubst > deploy/docker-compose.yaml
+      - name: cloning files to server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.HOST_USERNAME }}
+          password: ${{ secrets.HOST_PASSWORD }}
+          source: "deploy/docker-compose.yaml"
+          target: "cw5-app"
+          strip_components: 1
+      - name: running docker-compose
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.HOST_USERNAME }}
+          password: ${{ secrets.HOST_PASSWORD }}
+          script: |
+            cd cw5-app
+            echo ${{ secrets.HOST_PASSWORD }} | sudo -S docker-compose up -d

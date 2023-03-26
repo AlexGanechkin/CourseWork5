@@ -1,0 +1,9 @@
+version: "3.9"
+
+services:
+  api:
+    image: alexjohanson/cw5-app:$GITHUB_REF_NAME-$GITHUB_RUN_ID
+    ports:
+      - 80:80
+    volumes:
+      - ./data:/code/data
