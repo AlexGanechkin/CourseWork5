@@ -15,28 +15,25 @@ class Skill(ABC):
 
     @property
     @abstractmethod
-    def name(self):
+    def name(self) -> str:
         pass
 
     @property
     @abstractmethod
-    def stamina(self):
+    def stamina(self) -> int:
         pass
 
     @property
     @abstractmethod
-    def damage(self):
+    def damage(self) -> int:
         pass
 
     @abstractmethod
     def skill_effect(self) -> str:
         pass
 
-    def _is_stamina_enough(self):
-        return self.user.stamina > self.stamina
-
-    def _skill_effect(self):
-        pass
+    def _is_stamina_enough(self) -> bool:
+        return self.user.stamina >= self.stamina
 
     def use(self, user: BaseUnit, target: BaseUnit) -> str:
         """
@@ -56,7 +53,7 @@ class FuryPunch(Skill):
     stamina = 6
     damage = 12
 
-    def skill_effect(self):
+    def skill_effect(self) -> str:
 
         if self.target.hp - self.damage >= 0:
             self.target.hp -= self.damage
@@ -72,7 +69,7 @@ class HardShot(Skill):
     stamina = 5
     damage = 15
 
-    def skill_effect(self):
+    def skill_effect(self) -> str:
 
         if self.target.hp - self.damage >= 0:
             self.target.hp -= self.damage

@@ -1,0 +1,10 @@
+[Unit]
+Description=CourseWork5
+After=network.target
+
+[Service]
+WorkingDirectory=/home/ajohanson/CourseWork5
+ExecStart=/home/ajohanson/CourseWork5/env/bin/python3 -m flask run -h 0.0.0.0 -p 80
+
+[Install]
+WantedBy=multi-user.target

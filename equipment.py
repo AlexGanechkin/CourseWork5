@@ -1,6 +1,6 @@
 from abc import abstractmethod
 from dataclasses import dataclass
-from typing import List
+from typing import List, Optional
 from random import uniform
 import marshmallow_dataclass
 import marshmallow
@@ -9,6 +9,7 @@ import json
 
 @dataclass
 class Armor:
+    id: int
     name: str
     defence: float
     stamina_per_turn: float
@@ -19,6 +20,7 @@ class Armor:
 
 @dataclass
 class Weapon:
+    id: int
     name: str
     min_damage: float
     max_damage: float
@@ -43,15 +45,17 @@ class Equipment:
     def __init__(self):
         self.equipment = self._get_equipment_data()
 
-    def get_weapon(self, weapon_name) -> Weapon:
+    def get_weapon(self, weapon_name: str) -> Optional[Weapon]:
         for weapon in self.equipment.weapons:
             if weapon_name in weapon.name:
                 return weapon
+        return None
 
-    def get_armor(self, armor_name) -> Armor:
+    def get_armor(self, armor_name: str) -> Optional[Armor]:  # от наставника: лучше делать поиск по словарю "имя: объект"
         for armor in self.equipment.armors:
             if armor_name in armor.name:
                 return armor
+        return None
 
     def get_weapons_names(self) -> list:
         return [weapon.name for weapon in self.equipment.weapons]
